@@ -362,7 +362,7 @@ If the PoP Token passes all verifications, the PoP Token is valid an the Client 
 The OpenID Provider MUST verify the other attributes of JSON object in the Identity Certification Token Request as described in [Section 4.3](#43-identity-certification-token-request).
 
 
-### 4.5. Identity Certification Token Issuance
+### 4.5. Identity Certification Token
 
 If the Identity Certification Token Request is valid, the OpenID Provider MUST issue an Identity Certification Token.
 
@@ -394,6 +394,9 @@ An example of a decoded Identity Certification Token header and payload shown in
       "y": "QkE_Ij2H6nCoO9WGqAtATEN3on_BilyNcl5uH3Zk_OFa4qzudCmiWS10TIGVuS5P"
     }
   },
+  "ctx": [
+    "email"
+  ],
   "name": "John Smith",
   "email": "john.smith@mail.example.com"
 }
@@ -405,9 +408,9 @@ The JSON Web Token using the example OpenID Provider key pair of Figure 9 is sho
 ```jwt
 eyJ0eXAiOiJqd3QraWN0IiwiYWxnIjoiRVMzODQiLCJraWQiOiJzRXI5N3J0OVVLRnVfX2VpX1pCRHppVG5lWjQifQ
 .
-eyJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImV4YW1wbGVjbGllbnQiLCJpYXQiOjE2OTE3MTIwMzAsIm5iZiI6MTY5MTcxMjAzMCwiZXhwIjoxNjkxNzEyMzMwLCJqdGkiOiJFaFNoNTV2SDllSzM1My1yMWkyeTVCcDd0UmsiLCJjbmYiOnsiandrIjp7Imt0eSI6IkVDIiwiY3J2IjoiUC0zODQiLCJ4IjoiLThMbjVKMmppRzlSNllwb3BaemstQ2NHb0RYanRkdmQxNnFCVHdBNEZLcnRXQnJsaGd3N2Z5aDBtR3Z4aGNsViIsInkiOiJRa0VfSWoySDZuQ29POVdHcUF0QVRFTjNvbl9CaWx5TmNsNXVIM1prX09GYTRxenVkQ21pV1MxMFRJR1Z1UzVQIn19LCJuYW1lIjoiSm9obiBTbWl0aCIsImVtYWlsIjoiam9obi5zbWl0aEBtYWlsLmV4YW1wbGUuY29tIn0
+eyJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImV4YW1wbGVjbGllbnQiLCJpYXQiOjE2OTE3MTIwMzAsIm5iZiI6MTY5MTcxMjAzMCwiZXhwIjoxNjkxNzEyMzMwLCJqdGkiOiJFaFNoNTV2SDllSzM1My1yMWkyeTVCcDd0UmsiLCJjbmYiOnsiandrIjp7Imt0eSI6IkVDIiwiY3J2IjoiUC0zODQiLCJ4IjoiLThMbjVKMmppRzlSNllwb3BaemstQ2NHb0RYanRkdmQxNnFCVHdBNEZLcnRXQnJsaGd3N2Z5aDBtR3Z4aGNsViIsInkiOiJRa0VfSWoySDZuQ29POVdHcUF0QVRFTjNvbl9CaWx5TmNsNXVIM1prX09GYTRxenVkQ21pV1MxMFRJR1Z1UzVQIn19LCJjdHgiOlsiZW1haWwiXSwibmFtZSI6IkpvaG4gU21pdGgiLCJlbWFpbCI6ImpvaG4uc21pdGhAbWFpbC5leGFtcGxlLmNvbSJ9
 .
-CPDCaV6iS6AjDX_3AUsfwlTDcK6VcX1bdOiQFw486rxlItE27r4hHzm-iDp2aG2WHFacUd1SYtkMKR-aV4xmgKuiNREwGv-QO0b1zmz_nmblqNCVNc-pIsROxllJy2QK
+NrAKK390AnmO-Anb4drSANpsccOmzJ31QhmCGCr_KIr8AynZ5JtdfEHzIy5GnnCZnFX40ObkJifcf-BGj8Vq8n-WPcEk26e8QuL3kppG9m2AMGiKjhIJGBgxxOP3jCn6
 ```
 Fig. 8: Example of encoded Identity Certification Token using the example key pair of Figure 9.
 
@@ -494,12 +497,17 @@ The following JWT Claims are allowed:
   A JSON object that contains the JSON Web Key representation of the verified public key of the Client as defined in [Section 3.2 of RFC 7800](https://datatracker.ietf.org/doc/html/rfc7800#section-3.2).
   This object contains only the `jwk` attribute which represents the public key of the Client as provided in the `jwk` header attribute of the PoP Token.
 
+**`ctx` (Context)**
+  REQUIRED.
+  A JSON array that contains the granted authentication contexts of the Access Token.
+  The contexts are STRINGs without the `e2e_auth_` prefix of the corresponding scopes from the Access Token.
+
 The Payload MUST also contain the Identity Claims of the End-User that the Client requested in the `required_claims`.
 The Payload MUST also contain the Identity Claims of the End-User that the Client requested in the `optional_claims`, if known to the OpenID Provider, and the Access Token's scope is sufficient.
 
 ### 4.6. Identity Certification Token Response
 
-If the Identity Certification Token Request Verification was valid and generating the Identity Certification Token was successful, the OpenID Provider responds with a JSON object containing the following parameters.
+If the Identity Certification Token Request Verification was valid and generating the Identity Certification Token was successful, the OpenID Provider responds with an HTTP `201 Created` response with a JSON object containing the following parameters in the Body.
 
 **`identity_certification_token`**
   REQUIRED.
@@ -508,6 +516,28 @@ If the Identity Certification Token Request Verification was valid and generatin
 **`identity_certification_token_expires_in`**
   OPTIONAL.
   The number of seconds in which the Identity Certification Token expires.
+
+**`e2e_auth_contexts`**
+  OPTIONAL.
+  A JSON array of end-to-end authentication contexts.
+
+**Example:**
+
+An example of the Identity Certification Token Response is shown in Figure 10.
+
+```
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "identity_certification_token": "eyJ0eXAiOiJqd3QraWN0IiwiYWxnIjoiRVMzODQiLCJraWQiOiJzRXI5N3J0OVVLRnVfX2VpX1pCRHppVG5lWjQifQ.eyJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImV4YW1wbGVjbGllbnQiLCJpYXQiOjE2OTE3MTIwMzAsIm5iZiI6MTY5MTcxMjAzMCwiZXhwIjoxNjkxNzEyMzMwLCJqdGkiOiJFaFNoNTV2SDllSzM1My1yMWkyeTVCcDd0UmsiLCJjbmYiOnsiandrIjp7Imt0eSI6IkVDIiwiY3J2IjoiUC0zODQiLCJ4IjoiLThMbjVKMmppRzlSNllwb3BaemstQ2NHb0RYanRkdmQxNnFCVHdBNEZLcnRXQnJsaGd3N2Z5aDBtR3Z4aGNsViIsInkiOiJRa0VfSWoySDZuQ29POVdHcUF0QVRFTjNvbl9CaWx5TmNsNXVIM1prX09GYTRxenVkQ21pV1MxMFRJR1Z1UzVQIn19LCJjdHgiOlsiZW1haWwiXSwibmFtZSI6IkpvaG4gU21pdGgiLCJlbWFpbCI6ImpvaG4uc21pdGhAbWFpbC5leGFtcGxlLmNvbSJ9.NrAKK390AnmO-Anb4drSANpsccOmzJ31QhmCGCr_KIr8AynZ5JtdfEHzIy5GnnCZnFX40ObkJifcf-BGj8Vq8n-WPcEk26e8QuL3kppG9m2AMGiKjhIJGBgxxOP3jCn6",
+  "identity_certification_token_expires_in": 299,
+  "e2e_auth_contexts": [
+    "email"
+  ]
+}
+```
+Fig. 10: Example of an Identity Certification Token Response.
 
 
 ## 5. End-to-End Authentication
