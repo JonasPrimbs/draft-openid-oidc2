@@ -99,7 +99,7 @@ To authorize the Client, the End-User is treated as a Resource Owner that author
 Thereby, the Client MUST use a Proof Key for Code Exchange (PKCE) according to [RFC7636](https://datatracker.ietf.org/doc/html/rfc7636).
 
 
-## 3.1. End-to-End Authentication Context
+### 3.1. End-to-End Authentication Context
 
 The End-User MUST authorize the Client for end-to-end authentication in specific application contexts.
 Therefore, the Client MUST request a pre-registered Access Token Scope that follows the rules of Section 3.3 of [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749) and is prefixed with the string `e2e_auth_`.
@@ -410,7 +410,7 @@ eyJ0eXAiOiJqd3QraWN0IiwiYWxnIjoiRVMzODQiLCJraWQiOiJzRXI5N3J0OVVLRnVfX2VpX1pCRHpp
 .
 eyJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImV4YW1wbGVjbGllbnQiLCJpYXQiOjE2OTE3MTIwMzAsIm5iZiI6MTY5MTcxMjAzMCwiZXhwIjoxNjkxNzEyMzMwLCJqdGkiOiJFaFNoNTV2SDllSzM1My1yMWkyeTVCcDd0UmsiLCJjbmYiOnsiandrIjp7Imt0eSI6IkVDIiwiY3J2IjoiUC0zODQiLCJ4IjoiLThMbjVKMmppRzlSNllwb3BaemstQ2NHb0RYanRkdmQxNnFCVHdBNEZLcnRXQnJsaGd3N2Z5aDBtR3Z4aGNsViIsInkiOiJRa0VfSWoySDZuQ29POVdHcUF0QVRFTjNvbl9CaWx5TmNsNXVIM1prX09GYTRxenVkQ21pV1MxMFRJR1Z1UzVQIn19LCJjdHgiOlsiZW1haWwiXSwibmFtZSI6IkpvaG4gU21pdGgiLCJlbWFpbCI6ImpvaG4uc21pdGhAbWFpbC5leGFtcGxlLmNvbSJ9
 .
-NrAKK390AnmO-Anb4drSANpsccOmzJ31QhmCGCr_KIr8AynZ5JtdfEHzIy5GnnCZnFX40ObkJifcf-BGj8Vq8n-WPcEk26e8QuL3kppG9m2AMGiKjhIJGBgxxOP3jCn6
+XgrRf30PM44eyi18W9rttaxBYxyV9A5mNsOVd5FA4lZ8lEBtzJLSrTekJKo6hnKDTXEVkESAYvq1EsbjA4stXOs1t2Qku66julJPpLGsTPaANYUgjFAkJESWa-YkhYft
 ```
 Fig. 8: Example of encoded Identity Certification Token using the example key pair of Figure 9.
 
@@ -530,7 +530,7 @@ HTTP/1.1 201 Created
 Content-Type: application/json
 
 {
-  "identity_certification_token": "eyJ0eXAiOiJqd3QraWN0IiwiYWxnIjoiRVMzODQiLCJraWQiOiJzRXI5N3J0OVVLRnVfX2VpX1pCRHppVG5lWjQifQ.eyJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImV4YW1wbGVjbGllbnQiLCJpYXQiOjE2OTE3MTIwMzAsIm5iZiI6MTY5MTcxMjAzMCwiZXhwIjoxNjkxNzEyMzMwLCJqdGkiOiJFaFNoNTV2SDllSzM1My1yMWkyeTVCcDd0UmsiLCJjbmYiOnsiandrIjp7Imt0eSI6IkVDIiwiY3J2IjoiUC0zODQiLCJ4IjoiLThMbjVKMmppRzlSNllwb3BaemstQ2NHb0RYanRkdmQxNnFCVHdBNEZLcnRXQnJsaGd3N2Z5aDBtR3Z4aGNsViIsInkiOiJRa0VfSWoySDZuQ29POVdHcUF0QVRFTjNvbl9CaWx5TmNsNXVIM1prX09GYTRxenVkQ21pV1MxMFRJR1Z1UzVQIn19LCJjdHgiOlsiZW1haWwiXSwibmFtZSI6IkpvaG4gU21pdGgiLCJlbWFpbCI6ImpvaG4uc21pdGhAbWFpbC5leGFtcGxlLmNvbSJ9.NrAKK390AnmO-Anb4drSANpsccOmzJ31QhmCGCr_KIr8AynZ5JtdfEHzIy5GnnCZnFX40ObkJifcf-BGj8Vq8n-WPcEk26e8QuL3kppG9m2AMGiKjhIJGBgxxOP3jCn6",
+  "identity_certification_token": "eyJ0eXAiOiJqd3QraWN0IiwiYWxnIjoiRVMzODQiLCJraWQiOiJzRXI5N3J0OVVLRnVfX2VpX1pCRHppVG5lWjQifQ.eyJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImV4YW1wbGVjbGllbnQiLCJpYXQiOjE2OTE3MTIwMzAsIm5iZiI6MTY5MTcxMjAzMCwiZXhwIjoxNjkxNzEyMzMwLCJqdGkiOiJFaFNoNTV2SDllSzM1My1yMWkyeTVCcDd0UmsiLCJjbmYiOnsiandrIjp7Imt0eSI6IkVDIiwiY3J2IjoiUC0zODQiLCJ4IjoiLThMbjVKMmppRzlSNllwb3BaemstQ2NHb0RYanRkdmQxNnFCVHdBNEZLcnRXQnJsaGd3N2Z5aDBtR3Z4aGNsViIsInkiOiJRa0VfSWoySDZuQ29POVdHcUF0QVRFTjNvbl9CaWx5TmNsNXVIM1prX09GYTRxenVkQ21pV1MxMFRJR1Z1UzVQIn19LCJjdHgiOlsiZW1haWwiXSwibmFtZSI6IkpvaG4gU21pdGgiLCJlbWFpbCI6ImpvaG4uc21pdGhAbWFpbC5leGFtcGxlLmNvbSJ9.XgrRf30PM44eyi18W9rttaxBYxyV9A5mNsOVd5FA4lZ8lEBtzJLSrTekJKo6hnKDTXEVkESAYvq1EsbjA4stXOs1t2Qku66julJPpLGsTPaANYUgjFAkJESWa-YkhYft",
   "identity_certification_token_expires_in": 299,
   "e2e_auth_contexts": [
     "email"
@@ -542,7 +542,182 @@ Fig. 10: Example of an Identity Certification Token Response.
 
 ## 5. End-to-End Authentication
 
-TODO
+The End-to-End Authentication Procedure is depicted in Figure 11.
+
+```
+     +--------+                         +----------------+
+     |        |  (1) E2E AuthN Message  | Authenticating |
+     | Client | ----------------------> |      Party     |
+     +--------+   E2E-PoP-Token + ICT   +----------------+
+                                                 ^        
+                                                 |  (2)   
+                                                 | Trust  
+                                                 |  OP?   
+                                                 v        
+                                        +----------------+
+                                        | Authenticating |
+                                        |      User      |
+                                        +----------------+
+```
+Fig. 11: The End-to-End Authentication Procedure.
+
+
+### 5.1. Requirements
+
+To authenticate itself end-to-end to the Authenticating Party as the End-User, it is REQUIRED that the Client has:
+
+1. An Identity Certification Token.
+2. The corresponding private key to the public key contained in the `cnf` claim of the Identity Certification Token.
+
+
+### 5.2. Preparation
+
+When sending the End-to-End Authentication Message, the Client MUST prove the possession of the corresponding private key for the public key that serves as the `cnf` claim of the Identity Certification Token.
+The Client proves this possession with an End-to-End Proof-of-Possession Token.
+
+
+#### 5.2.1. End-to-End Proof-of-Possession Token
+
+The End-to-End Proof-of-Possession Token is a JWT as defined in [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519).
+The Token MUST be protected agains replay attacks.
+
+Figure 12 contains an example of an End-to-End Proof-of-Possession Token.
+
+```json
+// Header:
+{
+  "typ": "jwt+e2epop",
+  "alg": "ES384",
+  "jkt": "hmHy9zyQr9AkF8T6eSF_saOn1af6VXJSRh5Ve4r2qDk"
+}
+// Payload:
+{
+  "iss": "exampleclient",
+  "sub": "1234567890",
+  "aud": "7VvkHN1cZnXN3EFhwvy1SX3SUqY",
+  "iat": 1691712060,
+  "nbf": 1691712060,
+  "exp": 1691712360,
+  "jti": "1A7mDXEOj2nTtN4mrmbJ3Za1kww"
+}
+```
+Fig. 12: Example of a decoded End-to-End Proof-of-Possession Token Header and Payload.
+
+Figure 13 contains an example of the encoded End-to-End Proof-of-Possession Token.
+
+```jwt
+eyJ0eXAiOiJqd3QrZTJlcG9wIiwiYWxnIjoiRVMzODQiLCJqa3QiOiJobUh5OXp5UXI5QWtGOFQ2ZVNGX3NhT24xYWY2VlhKU1JoNVZlNHIycURrIn0
+.
+eyJpc3MiOiJleGFtcGxlY2xpZW50Iiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6IjdWdmtITjFjWm5YTjNFRmh3dnkxU1gzU1VxWSIsImlhdCI6MTY5MTcxMjA2MCwibmJmIjoxNjkxNzEyMDYwLCJleHAiOjE2OTE3MTIzNjAsImp0aSI6IjFBN21EWEVPajJuVHRONG1ybWJKM1phMWt3dyJ9
+.
+xjXhJCJcMJwBlEVGCJf9Tlj0T4lc0zMOVifooG_0kUk0GITlnCk_gUg7cFuPAIVZ5wVjJrSQATuVfutEtCF2CRLKtuwt6O8AJLn7yIHOoURzUi8RVHnjfPjc9rKMbQ6D
+```
+Fig. 13: Example of an encoded End-to-End Proof-of-Possession Token.
+
+
+##### 5.2.1.1. JOSE Header
+
+The JOSE header of the End-to-End Proof-of-Possession Token contains the following parameters:
+
+**`alg` (Algorithm)**
+  REQUIRED.
+  The signature algorithm used to sign the End-to-End Proof-of-Possession Token.
+
+**`jkt` (JWK Thumbprint)**
+  REQUIRED.
+  The JSON Web Key Thumbprint as specified in [RFC 7638](https://datatracker.ietf.org/doc/html/rfc7638) of the Client's public key which is present in the `cnf` claim of the Identity Certification Token.
+
+**`typ` (Type)**
+  REQUIRED.
+  MUST be set to `jwt+e2epop`.
+
+
+##### 5.2.1.2. JWT Claims
+
+The End-to-End Proof-of-Possession Token contains the following claims:
+
+**`iss` (Issuer)**
+  REQUIRED.
+  The Client ID of the Client.
+
+**`sub` (Subject)**
+  REQUIRED.
+  The Subject Identifier of the End-User.
+
+**`aud` (Audience)**
+  REQUIRED.
+  A unique identifier of the audience of the End-to-End Authentication.
+  In a one-to-one authentication process, only the Authenticating Party instance MUST identify itself with this Audience, e.g., a nonce that has previously been negotiated.
+  In a one-to-many authentication process, every Authenticating Parties, and only them MUST identify themselves with this Audience, e.g., a session identifier that has previously been negotiated, or the Subject Identifier of the Authenticating End-User.
+
+**`iat` (Issued At)**
+  REQUIRED.
+  MUST be the unix timestamp with seconds precision when issuing the End-to-End Proof-of-Possession Token.
+
+**`nbf` (Not Before)**
+  OPTIONAL.
+  MUST be the unix timestamp with seconds precision when the End-to-End Proof-of-Possession Token becomes valid.
+  This is typically the same as the `iat` claim.
+
+**`exp` (Expiration Time)**
+  REQUIRED.
+  MUST be the unix timestamp with seconds precision when the End-to-End Proof-of-Possession Token expires.
+  This timestamp MUST NOT be before the `iat` timestamp and MUST NOT be more than 5 minutes after the `iat` timestamp.
+  Therefore, the maximum lifetime of the End-to-End Proof-of-Possession Token is 5 minutes.
+
+**`jti` (JWT ID)**
+  REQUIRED.
+  MUST be a randomly generated STRING as specified in [Section 4.1.7 of RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7) that is unique for the combination of Issuer, Subject, and Audience within the lifespan of the End-to-End Proof-of-Possession Token.
+
+
+### 5.3. End-to-End Authentication Message
+
+The exact format of the End-to-End Authentication Message is not in scope of this document.
+The only requirements that this document defines for the End-to-End Authentication Message are:
+
+1. It MUST contain the End-to-End Proof-of-Possession Token.
+2. It MUST contain the Identity Certification Token.
+
+Both tokens MAY be sent in different messages.
+However, it is RECOMMENDED to send them in one message.
+
+
+### 5.4. End-to-End Identity Verification
+
+To verify the identity of the Client's End-User, the Authenticating Party MUST verify the End-to-End Authentication Message by verifying the End-to-End Proof-of-Possession Token and the Identity Certification Token.
+It is RECOMMENDED to verify them in the following order:
+
+1. Verify End-to-End Proof-of-Possession Token.
+2. Verify Identity Certification Token.
+
+
+#### 5.4.1. End-to-End Proof-of-Possession Token Verification
+
+The Authenticating Party MUST verify the validity of the End-to-End Proof-of-Possession Token as follows:
+
+- The `jkt` header MUST be a valid JWK Thumbprint as specified in [RFC 7638](https://datatracker.ietf.org/doc/html/rfc7638) of the JSON Web Key provided in the `cnf` claim of the Identity Certification Token.
+- The Authenticating Party MUST verify the signature of the End-to-End Proof-of-Possession Token using the public key provided as `cnf` claim of the Identity Certification Token. The signature MUST be valid.
+- If the `nbf` claim is provided, its timestamp MUST be before the verification timestamp.
+- The timestamp in the `iat` claim MUST be before the verification timestamp.
+- The timestamp in the `exp` claim MUST be after the verification timestamp.
+- If the Authenticating Party requires a specific implementation of the Client, it MUST verify the `iss` claim to be the Client ID of the expected Client.
+- The Authenticating Party MUST identify itself with the `aud` claim.
+- To protect the End-to-End Proof-of-Possession Token from being replayed, the Authenticating Party MUST ensure that the `jti` claim is unique within the validity period of the End-to-End Proof-of-Possession Token.
+
+#### 5.4.2. Identity Certification Token Verification
+
+The Authenticating Party MUST verify the validity of the Identity Certification Token as follows:
+
+- The signature of the Identity Certification Token MUST be valid. To verify the signature, the Authenticating Party requests the Identity Certification Token's Issuer's (`iss` claim, aka the OpenID Provider) public key that is associated with the `kid` from the Identity Certification Token's Header.
+- If the `nbf` claim is provided, its timestamp MUST be before the verification timestamp.
+- The timestamp in the `iat` claim MUST be before the verification timestamp.
+- The timestamp in the `exp` claim MUST be after the verification timestamp.
+- The `sub` claim of the Identity Certification Token MUST be equal to the `sub` claim of the End-to-End Proof-of-Possession Token.
+- If the `aud` claim is present in the Identity Certification Token, the `aud` claim of the Identity Certification Token MUST be equal to the `iss` claim of the End-to-End Proof-of-Possession Token.
+- To protect the Identity Certification Token from being replayed, the Authenticating Party MUST ensure that the `jti` claim is unique within the validity period of the Identity Certification Token.
+- The Identity Certification Token MUST contain all contexts in the `ctx` claim that the Authenticating Party requires for the authentication process.
+- The identity claims in the Identity Certification Token MUST correspond to the identity claims about End-User that the Authenticating Party expects. This also states for the `sub` claim.
+- The Authenticating User MUST trust the Issuer (`iss` claim, aka the OpenID Provider). This can be verified using a whitelist, or asking the Authenticating User which requires additional user interaction. To improve the user experience, everythingelse SHOULD be valid, before asking the Authenticating User.
 
 
 ## 6. Mutual Authentication
