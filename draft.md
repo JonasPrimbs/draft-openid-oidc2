@@ -473,7 +473,7 @@ The following JWT Claims are allowed:
   OPTIONAL by default.
   It MAY be REQUIRED depending on the `with_audience` attribute was present in the Identity Certification Token Request object.
   If `with_audience` is `true`, it is REQUIRED.
-  If `with_audience` is `false`, it MUST not be present.
+  If `with_audience` is `false`, it MUST NOT be present.
   If `with_audience` is not present, the presence of the claim is not defined.
   If the claim is present, it MUST be set to the Client ID of the Client that requested the Identity Certification Token.
 
