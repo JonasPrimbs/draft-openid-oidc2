@@ -1,6 +1,6 @@
 # Open Identity Certification with OpenID Connect (OIDC²)
 
-Last Update: August 11, 2023
+Last Update: August 30, 2023
 
 
 ## Abstract
@@ -220,6 +220,21 @@ To fulfill the replay protection requirements, the payload claims MUST be as fol
   REQUIRED.
   MUST be a randomly generated STRING as specified in [Section 4.1.7 of RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7) that is unique for the combination of Issuer, Subject, and Audience within the lifespan of the PoP Token.
 
+**`required_claims`**
+  OPTIONAL.
+  An array of claims according to [Section 5 of the OpenID Connect Core Specification](https://openid.net/specs/openid-connect-core-1_0.html#Claims) which MUST be present in the requested Identity Certification Token.
+  If the scope of the Access Token is not sufficient or any claim is not known, the OpenID Provider MUST respond with an HTTP `404 Not Found` error.
+
+**`optional_claims`**
+  OPTIONAL.
+  An array of claims according to [Section 5 of the OpenID Connect Core Specification](https://openid.net/specs/openid-connect-core-1_0.html#Claims) which MAY be present in the requested Identity Certification Token.
+  If the scope of the Access Token is sufficient and the claims are present to the OpenID Provider, they MUST be included in the issued Identity Certification Token.
+
+**`with_audience`**
+  OPTIONAL.
+  A boolean value which defines whether the `aud` claim MUST be present in the Identity Certification Token (`true`), or not (`false`).
+  If not provided, the OpenID Provider assumes `true`.
+
 
 **Example:**
 
@@ -245,7 +260,15 @@ Figure 4 shows a decoded example of the PoP Token's header and payload using the
   "iat": 1691712000, // Current unix timestamp
   "nbf": 1691712000, // (Optional) current unix timestamp
   "exp": 1691712060, // Current unix timestamp + 1 min
-  "jti": "d6_ptZmZ8laX4DKoWXD08oZX5yo" // Random PoP ID.
+  "jti": "d6_ptZmZ8laX4DKoWXD08oZX5yo", // Random PoP ID.
+  "required_claims": [
+    "name"
+  ],
+  "optional_claims": [
+    "email",
+    "phone_number"
+  ],
+  "with_audience": true
 }
 ```
 Fig. 4: Example of a decoded header and payload of the PoP Token. Additional line breaks, spaces, and comments are for displaying purposes only.
@@ -255,9 +278,9 @@ Figure 5 shows the PoP Token from Figure 4 as an encoded PoP Token.
 ```jwt
 eyJhbGciOiJFUzM4NCIsInR5cCI6Imp3dCtwb3AiLCJqd2siOnsia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsIngiOiItOExuNUoyamlHOVI2WXBvcFp6ay1DY0dvRFhqdGR2ZDE2cUJUd0E0RktydFdCcmxoZ3c3ZnloMG1HdnhoY2xWIiwieSI6IlFrRV9JajJINm5Db085V0dxQXRBVEVOM29uX0JpbHlOY2w1dUgzWmtfT0ZhNHF6dWRDbWlXUzEwVElHVnVTNVAifX0
 .
-eyJpc3MiOiJleGFtcGxlY2xpZW50Iiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6Imh0dHBzOi8vb3AuZXhhbXBsZS5jb20iLCJpYXQiOjE2OTE3MTIwMDAsIm5iZiI6MTY5MTcxMjAwMCwiZXhwIjoxNjkxNzEyMDYwLCJqdGkiOiJkNl9wdFptWjhsYVg0REtvV1hEMDhvWlg1eW8ifQ
+eyJpc3MiOiJleGFtcGxlY2xpZW50Iiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6Imh0dHBzOi8vb3AuZXhhbXBsZS5jb20iLCJpYXQiOjE2OTE3MTIwMDAsIm5iZiI6MTY5MTcxMjAwMCwiZXhwIjoxNjkxNzEyMDYwLCJqdGkiOiJkNl9wdFptWjhsYVg0REtvV1hEMDhvWlg1eW8iLCJyZXF1aXJlZF9jbGFpbXMiOlsibmFtZSJdLCJvcHRpb25hbF9jbGFpbXMiOlsiZW1haWwiLCJwaG9uZV9udW1iZXIiXSwid2l0aF9hdWRpZW5jZSI6dHJ1ZX0
 .
-LZnTlZldaUX6RjO9ZqO3hsQR8dyIHBAeZu_s7CsFPs1mre-5Kq6FcxRaGDC7WIVLV5-QHD_quOqbc6PY_jYbQWizmxYZvYvJYu-yj4Nt04RHPAmFowNNZ6REge5fMHHX
+LnFFlhhZipPm0FFt8eUQff5cVAoPRnxa0udNRicjXMZDewMGbXF0q5J2j2XBfAoem0cm8twTFnf56x1iraqr8bpe17U6yp_B-s9YZmUTne-Bd3AHhGgisKpVCubMz_jD
 ```
 Fig. 5: Example of an encoded PoP Token. Additional line breaks are for displaying purposes only.
 
@@ -273,6 +296,9 @@ If the OpenID Provider supports this endpoint, it MUST be referenced in the Open
   URL of the OpenID Provider's Identity Certification Token Endpoint.
   This URL MUST use the https scheme and MAY contain port and path components.
 
+
+#### 4.3.1. Headers
+
 The Identity Certification Token Endpoint is an HTTP POST endpoint with the following headers:
 
 **`Authorization`**
@@ -282,29 +308,15 @@ The Identity Certification Token Endpoint is an HTTP POST endpoint with the foll
 
 **`Content-Type`**
   REQUIRED.
-  MUST be set to `application/json`
+  MUST be set to `application/jwt+pop`
 
-In the HTTP POST Body, the Client MUST provide a JSON object, containing the following attributes:
 
-**`pop_token`**
-  REQUIRED.
-  The generated PoP Token.
+#### 4.3.2. Body
 
-**`required_claims`**
-  OPTIONAL.
-  An array of claims according to [Section 5 of the OpenID Connect Core Specification](https://openid.net/specs/openid-connect-core-1_0.html#Claims) which MUST be present in the requested Identity Certification Token.
-  If the scope of the Access Token is not sufficient or any claim is not known, the OpenID Provider MUST respond with an HTTP `404 Not Found` error.
+In the HTTP POST Body, the Client MUST provide the Proof-of-Possession Token.
 
-**`optional_claims`**
-  OPTIONAL.
-  An array of claims according to [Section 5 of the OpenID Connect Core Specification](https://openid.net/specs/openid-connect-core-1_0.html#Claims) which MAY be present in the requested Identity Certification Token.
-  If the scope of the Access Token is sufficient and the claims are present to the OpenID Provider, they MUST be included in the issued Identity Certification Token.
 
-**`with_audience`**
-  OPTIONAL.
-  A boolean value which defines whether the `aud` claim MUST be present in the Identity Certification Token (`true`), or not (`false`).
-
-**Example:**
+#### 4.3.3. Example
 
 Figure 6 contains a sample Identity Certification Token Request.
 
@@ -313,17 +325,7 @@ POST /ict HTTP/1.1
 Authorization: bearer ey...
 Content-Type: application/json
 
-{
-  "pop_token": "eyJhbGciOiJFUzM4NCIsInR5cCI6Imp3dCtwb3AiLCJqd2siOnsia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsIngiOiItOExuNUoyamlHOVI2WXBvcFp6ay1DY0dvRFhqdGR2ZDE2cUJUd0E0RktydFdCcmxoZ3c3ZnloMG1HdnhoY2xWIiwieSI6IlFrRV9JajJINm5Db085V0dxQXRBVEVOM29uX0JpbHlOY2w1dUgzWmtfT0ZhNHF6dWRDbWlXUzEwVElHVnVTNVAifX0.eyJpc3MiOiJleGFtcGxlY2xpZW50Iiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6Imh0dHBzOi8vb3AuZXhhbXBsZS5jb20iLCJpYXQiOjE2OTE3MTIwMDAsIm5iZiI6MTY5MTcxMjAwMCwiZXhwIjoxNjkxNzEyMDYwLCJqdGkiOiJkNl9wdFptWjhsYVg0REtvV1hEMDhvWlg1eW8ifQ.LZnTlZldaUX6RjO9ZqO3hsQR8dyIHBAeZu_s7CsFPs1mre-5Kq6FcxRaGDC7WIVLV5-QHD_quOqbc6PY_jYbQWizmxYZvYvJYu-yj4Nt04RHPAmFowNNZ6REge5fMHHX",
-  "required_claims": [
-    "name"
-  ],
-  "optional_claims": [
-    "email",
-    "phone_number"
-  ]
-}
-
+eyJhbGciOiJFUzM4NCIsInR5cCI6Imp3dCtwb3AiLCJqd2siOnsia3R5IjoiRUMiLCJjcnYiOiJQLTM4NCIsIngiOiItOExuNUoyamlHOVI2WXBvcFp6ay1DY0dvRFhqdGR2ZDE2cUJUd0E0RktydFdCcmxoZ3c3ZnloMG1HdnhoY2xWIiwieSI6IlFrRV9JajJINm5Db085V0dxQXRBVEVOM29uX0JpbHlOY2w1dUgzWmtfT0ZhNHF6dWRDbWlXUzEwVElHVnVTNVAifX0.eyJpc3MiOiJleGFtcGxlY2xpZW50Iiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6Imh0dHBzOi8vb3AuZXhhbXBsZS5jb20iLCJpYXQiOjE2OTE3MTIwMDAsIm5iZiI6MTY5MTcxMjAwMCwiZXhwIjoxNjkxNzEyMDYwLCJqdGkiOiJkNl9wdFptWjhsYVg0REtvV1hEMDhvWlg1eW8iLCJyZXF1aXJlZF9jbGFpbXMiOlsibmFtZSJdLCJvcHRpb25hbF9jbGFpbXMiOlsiZW1haWwiLCJwaG9uZV9udW1iZXIiXSwid2l0aF9hdWRpZW5jZSI6dHJ1ZX0.LnFFlhhZipPm0FFt8eUQff5cVAoPRnxa0udNRicjXMZDewMGbXF0q5J2j2XBfAoem0cm8twTFnf56x1iraqr8bpe17U6yp_B-s9YZmUTne-Bd3AHhGgisKpVCubMz_jD
 ```
 Fig. 6: Example of an Identity Certification Token Request.
 
@@ -513,7 +515,7 @@ If the Identity Certification Token Request Verification was valid and generatin
   REQUIRED.
   The Identity Certification Token.
 
-**`identity_certification_token_expires_in`**
+**`expires_in`**
   OPTIONAL.
   The number of seconds in which the Identity Certification Token expires.
 
@@ -531,7 +533,7 @@ Content-Type: application/json
 
 {
   "identity_certification_token": "eyJ0eXAiOiJqd3QraWN0IiwiYWxnIjoiRVMzODQiLCJraWQiOiJzRXI5N3J0OVVLRnVfX2VpX1pCRHppVG5lWjQifQ.eyJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIiwic3ViIjoiMTIzNDU2Nzg5MCIsImF1ZCI6ImV4YW1wbGVjbGllbnQiLCJpYXQiOjE2OTE3MTIwMzAsIm5iZiI6MTY5MTcxMjAzMCwiZXhwIjoxNjkxNzEyMzMwLCJqdGkiOiJFaFNoNTV2SDllSzM1My1yMWkyeTVCcDd0UmsiLCJjbmYiOnsiandrIjp7Imt0eSI6IkVDIiwiY3J2IjoiUC0zODQiLCJ4IjoiLThMbjVKMmppRzlSNllwb3BaemstQ2NHb0RYanRkdmQxNnFCVHdBNEZLcnRXQnJsaGd3N2Z5aDBtR3Z4aGNsViIsInkiOiJRa0VfSWoySDZuQ29POVdHcUF0QVRFTjNvbl9CaWx5TmNsNXVIM1prX09GYTRxenVkQ21pV1MxMFRJR1Z1UzVQIn19LCJjdHgiOlsiZW1haWwiXSwibmFtZSI6IkpvaG4gU21pdGgiLCJlbWFpbCI6ImpvaG4uc21pdGhAbWFpbC5leGFtcGxlLmNvbSJ9.XgrRf30PM44eyi18W9rttaxBYxyV9A5mNsOVd5FA4lZ8lEBtzJLSrTekJKo6hnKDTXEVkESAYvq1EsbjA4stXOs1t2Qku66julJPpLGsTPaANYUgjFAkJESWa-YkhYft",
-  "identity_certification_token_expires_in": 299,
+  "expires_in": 299,
   "e2e_auth_contexts": [
     "email"
   ]
